@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fb814ff02f2ad42c18315379a31f118c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 123259
+  packageName: Simple Blocky Dogs Animated
+  packageVersion: 1.0
+  assetPath: Assets/Simple Blocky Dogs Animated/3.animator_controllers/bichon_frise_anim_ctrl.controller
+  uploadId: 255829

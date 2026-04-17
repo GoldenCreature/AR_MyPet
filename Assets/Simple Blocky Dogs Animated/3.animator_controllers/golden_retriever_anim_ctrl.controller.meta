@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c5245b82c2303482993bb0c7239d10bf
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 123259
+  packageName: Simple Blocky Dogs Animated
+  packageVersion: 1.0
+  assetPath: Assets/Simple Blocky Dogs Animated/3.animator_controllers/golden_retriever_anim_ctrl.controller
+  uploadId: 255829

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7fc945ade6ef443fbb88da90e37fec2a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 123259
+  packageName: Simple Blocky Dogs Animated
+  packageVersion: 1.0
+  assetPath: Assets/Simple Blocky Dogs Animated/3.animator_controllers/beagle_anim_ctrl.controller
+  uploadId: 255829
