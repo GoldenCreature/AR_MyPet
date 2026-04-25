@@ -112,7 +112,7 @@ namespace CMS.AR_MyPet
                 SyncAnimator();
 
                 // MyPetManager에 수치 전달
-                MyPetManager.myPetInstance?.ReportHealthChanged(Hunger);
+                MyPetManager.myPetInstance?.ReportHungerChanged(Hunger);
             }
         }
 
