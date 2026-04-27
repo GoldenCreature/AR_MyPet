@@ -34,9 +34,9 @@ namespace HJS.AR_MyPet
         [SerializeField, Tooltip("친밀도(기분) 수치를 시각화하는 슬라이더 스크립트")]
         private MoodBar moodBarUI;
 
-        /*
+        
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        // 나중에 오브젝트 자동 생성시 사용할 함수
+        // 실행시 씬 로드보다 먼저 자동 생성
         static void InitManager()
         {
             // 하이어라키에 펫 메니저가 있는지 확인
@@ -50,7 +50,7 @@ namespace HJS.AR_MyPet
                 Debug.Log("<color=cyan>MyPetManager:</color> 매니저 자동 생성 완료");
             }
         }
-        */
+        
 
         // [객체 생성시]
         private void Awake() 
@@ -72,27 +72,52 @@ namespace HJS.AR_MyPet
         /// <param name="pet">생성된 펫의 GameObject 데이터를 전달하시오</param>
         public void RegisterPet(GameObject pet)
         {
-            if(pet == null) return;
+            if (pet == null) return;
+            
+            PetStatusController newStatus = pet.GetComponent<PetStatusController>();
+            if (status == null)
+            {
+                Debug.LogWarning("<color=red>MyPetManager: PetStatusController를 찾을 수 없습니다!");
+                return;
+            }
+            else
+                Debug.Log("<color=green>MyPetManager:</color> PetStatusController 감지");
 
+            status = newStatus;
             currentPet = pet;
             isPetSpawned = true;
             Debug.Log("<color=green>MyPetManager:</color> 펫매니저에 동물 등록 완료, isPetSpawned => true ");
 
+            // 스텟 수치가 변할 때마다 민규님 UI 슬라이더를 갱신하도록 이벤트 연결
+            BindEvents();
+
             RefreshAllUI(); // 등록후 스텟 값과 UI값 동기화
             Debug.Log("<color=green>MyPetManager:</color> UI 동기화 완료");
         }
-        
-        /// <summary>
-        /// 펫 터치 이벤트 발생 시 스테이터스 컨트롤러로 전달
-        /// </summary>
-        public void OnPetTouched()
-        {
-            if(!isPetSpawned) return;
 
-            Debug.Log("펫이 터치되었습니다.");
-            PetStatusController.Instance?.OnTouched();
-            
+        /// <summary>
+        /// 유니티 엑션 전용 이벤트 함수
+        /// </summary>
+        private void BindEvents()
+        {
+            if (status == null) return;
+
+            // 중복 구독을 막기 위해 등록해둔 람다식 제거 
+            if (hungerBarUI != null) status.OnHungerChanged -= UpdateHungerUI;
+            if (happinessBarUI != null) status.OnHappinessChanged -= UpdateHappinessUI;
+            if (moodBarUI != null) status.OnIntimacyChanged -= UpdateMoodUI;
+
+            // 새로 등록 
+            if (hungerBarUI != null) status.OnHungerChanged += UpdateHungerUI;
+            if (happinessBarUI != null) status.OnHappinessChanged += UpdateHappinessUI;
+            if (moodBarUI != null) status.OnIntimacyChanged += UpdateMoodUI;
         }
+
+        private void UpdateHungerUI(float val) { hungerBarUI.hungerSlider.value = val; }
+        private void UpdateHappinessUI(float val) { happinessBarUI.happinessSlider.value = val; }
+        private void UpdateMoodUI(float val) { moodBarUI.moodSlider.value = val; }
+
+        
         /// <summary>
         /// 펫 공복도 갱신 확인
         /// </summary>
@@ -108,48 +133,88 @@ namespace HJS.AR_MyPet
         /// </summary>
         public void RefreshAllUI()
         {
-            if(status == null) status = PetStatusController.Instance;
-            if(status == null) return;
+            if (status == null) return;
 
-            if(hungerBarUI != null) hungerBarUI.hungerSlider.value = status.Hunger;
-            if(moodBarUI != null) moodBarUI.moodSlider.value = status.Intimacy;
-            if(happinessBarUI != null) happinessBarUI.happinessSlider.value = status.Happiness;
+            if (hungerBarUI != null)
+            {
+                hungerBarUI.hungerSlider.value = status.Hunger;
+            }
+            if (moodBarUI != null)
+            {
+                moodBarUI.moodSlider.value = status.Intimacy;
+            }
+            if (happinessBarUI != null)
+            {
+                happinessBarUI.happinessSlider.value = status.Happiness;
+            }
+        }
+
+        /// <summary>
+        /// 먹이주기 버튼 눌렀을때 호출
+        /// </summary>
+        public void OnFeedButtonClicked()
+        {
+            // 펫이 소환되지 않았거나 연결이 없으면 리턴
+            if (!isPetSpawned || status == null) return;
+
+            Debug.Log("<color=yellow>MyPetManager:</color> 먹이주기 명령 전달");
+            status?.Feed(); 
+        }
+
+        /// <summary>
+        /// 놀아주기 버튼을 눌렀을 때 호출 
+        /// </summary>
+        public void OnPlayButtonClicked()
+        {
+            if (!isPetSpawned || status == null) return;
+
+            Debug.Log("<color=yellow>MyPetManager:</color> 놀아주기 명령 전달");
+            status?.Play(); 
+        }
+
+        /// <summary>
+        /// 펫 터치 이벤트 발생 시 스테이터스 컨트롤러로 전달
+        /// </summary>
+        public void OnPetTouched()
+        {
+            if (!isPetSpawned) return;
+
+            Debug.Log("펫이 터치되었습니다.");
+            status?.OnTouched();
+
         }
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Start()
         {
             // [연결] 민수님 상태 컨트롤러 주소 가져오기
-            status = PetStatusController.Instance;
-            if(status == null) 
-            {
-                Debug.LogWarning("<color=red>MyPetManager: PetStatusController를 찾을 수 없습니다!");
-                return; 
-            }
+            //status = PetStatusController.Instance;
+            //if(status == null) 
+            //{
+            //    Debug.LogWarning("<color=red>MyPetManager: PetStatusController를 찾을 수 없습니다!");
+            //    return; 
+            //}
 
             if(hungerBarUI == null) hungerBarUI = FindFirstObjectByType<HungerBar>();
             if(happinessBarUI == null) happinessBarUI = FindFirstObjectByType<HappinessBar>();
             if(moodBarUI == null) moodBarUI = FindFirstObjectByType<MoodBar>();
-
-            // [이벤트 구독] 스텟 수치가 변할 때마다 민규님 UI 슬라이더를 갱신하도록 예약
-
-            // 공복도 연결
-            if (hungerBarUI != null)
-                status.OnHungerChanged += (val) => hungerBarUI.hungerSlider.value = val;
-
-            // 행복도 연결
-            if(happinessBarUI != null)
-                status.OnHappinessChanged += (val) => happinessBarUI.happinessSlider.value = val;
-
-            // 친밀도(intimacy)와 MoodUI 연결
-            if(moodBarUI != null)
-                status.OnIntimacyChanged += (val) => moodBarUI.moodSlider.value = val;
         }
 
         // Update is called once per frame
         private void Update()
         {
 
+        }
+
+        private void OnDestroy()
+        {
+            if (status != null)
+            {
+                status.OnHungerChanged -= UpdateHungerUI;
+                status.OnHappinessChanged -= UpdateHappinessUI;
+                status.OnIntimacyChanged -= UpdateMoodUI;
+                Debug.Log("<color=yellow>MyPetManager:</color> 이벤트 연결 해제 및 메모리 정리 완료");
+            }
         }
     }
 
