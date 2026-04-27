@@ -1,14 +1,16 @@
+using CMS.AR_MyPet;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
-using System.Collections.Generic;
-using System;
 namespace KGB.AR_MyPet
 {
     public class ARPlacementManager : MonoBehaviour
     {
         [SerializeField] private ARRaycastManager _raycastManager;
         [SerializeField] private List<GameObject> _animalPrefabs;
+
 
         private List<ARRaycastHit> _hits = new List<ARRaycastHit>();
         private GameObject _spawnedAnimal;
@@ -53,14 +55,18 @@ namespace KGB.AR_MyPet
             }
         }
 
+        // ARPlacementManager.cs SpawnAnimal() 안에 추가
         private void SpawnAnimal(Pose hitPose)
         {
-            Debug.Log($"Prefab Index: {_selectedAnimalIndex}, Prefab No.: {_animalPrefabs.Count}"); 
-            Debug.Log($"Hit Pose: {hitPose.position}");
-
             Vector3 spawnPosition = new Vector3(hitPose.position.x, 0f, hitPose.position.z);
             _spawnedAnimal = Instantiate(_animalPrefabs[_selectedAnimalIndex], spawnPosition, hitPose.rotation);
-            _spawnedAnimal.AddComponent<AnimalMover>();
+
+            if (_spawnedAnimal.GetComponent<AnimalMover>() == null)
+                _spawnedAnimal.AddComponent<AnimalMover>();
+
+            // PetStatusController에 Animator 연결
+            Animator anim = _spawnedAnimal.GetComponent<Animator>();
+            PetStatusController.Instance?.SetAnimator(anim);
         }
 
         public GameObject GetSpawnedAnimal() => _spawnedAnimal;
