@@ -190,5 +190,10 @@ namespace CMS.AR_MyPet
             petAnimator.SetBool(P_IS_HUNGRY,  Hunger    < hungryThreshold);
             petAnimator.SetBool(P_IS_HAPPY,   Happiness > happyThreshold);
         }
+
+        public void SetAnimator(Animator animator)
+        {
+            petAnimator = animator;
+        }
     }
 }

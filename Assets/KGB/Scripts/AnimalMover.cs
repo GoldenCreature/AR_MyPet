@@ -6,33 +6,37 @@ namespace KGB.AR_MyPet
     {
         [SerializeField] private float _moveSpeed = 0.5f;
         [SerializeField] private float _arrivalThreshold = 0.1f;
-        [SerializeField] private float _idleDelay = 3f; // 몇 초 후 카메라 바라보기
+        [SerializeField] private float _idleDelay = 3f;
 
         private Vector3 _targetPosition;
         private bool _isMoving = false;
+        private bool _isLookingAtCamera = false;
         private float _idleTimer = 0f;
         private Camera _camera;
+        private Animator _animator;
 
         private void Awake()
         {
             _targetPosition = transform.position;
             _camera = Camera.main;
+            _animator = GetComponent<Animator>();
         }
 
         private void Update()
         {
             if (_isMoving)
             {
+                _isLookingAtCamera = false;
                 MoveToTarget();
             }
             else
             {
-                // 이동 안 할 때 타이머 누적
                 _idleTimer += Time.deltaTime;
 
-                if (_idleTimer >= _idleDelay)
+                if (_idleTimer >= _idleDelay && !_isLookingAtCamera)
                 {
-                    LookAtCamera();
+                    _isLookingAtCamera = true;
+                    _animator.SetTrigger("LookTrigger");
                 }
             }
         }
@@ -51,14 +55,15 @@ namespace KGB.AR_MyPet
             if (Vector3.Distance(transform.position, _targetPosition) < _arrivalThreshold)
             {
                 _isMoving = false;
-                _idleTimer = 0f; // 도착하면 타이머 초기화
+                _idleTimer = 0f;
+                _animator.SetBool("IsWalking", false);
             }
         }
 
         private void LookAtCamera()
         {
             Vector3 directionToCamera = _camera.transform.position - transform.position;
-            directionToCamera.y = 0f; // 위아래로 꺾이지 않게
+            directionToCamera.y = 0f;
 
             if (directionToCamera == Vector3.zero) return;
 
@@ -69,7 +74,8 @@ namespace KGB.AR_MyPet
         {
             _targetPosition = targetPosition;
             _isMoving = true;
-            _idleTimer = 0f; // 새 이동 명령 오면 타이머 초기화
+            _idleTimer = 0f;
+            _animator.SetBool("IsWalking", true);
         }
     }
 }
