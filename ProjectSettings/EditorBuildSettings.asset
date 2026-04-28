@@ -8,9 +8,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
+  - enabled: 0
     path: Assets/KGB/Scene/KGB_Scene.unity
     guid: d9609a2e92a4a574aaf14ed0a6f3733e
+  - enabled: 1
+    path: Assets/Scenes/FinalScene.unity
+    guid: 98e7023ea3ad41944996b7d80fba07f0
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 8cb0703b30dc0ab44a2f70057026eb7d, type: 2}
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 5d419c8a0909382439057592cc085809, type: 2}
