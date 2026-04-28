@@ -37,6 +37,11 @@ namespace CMS.AR_MyPet
         public float Intimacy  { get; private set; }
         public float Happiness { get; private set; }
 
+        // 내부 backing field (ApplyDecay에서 ref 사용)
+        private float _hunger;
+        private float _intimacy;
+        private float _happiness;
+
         // ─── UI 연동 이벤트 (SGMG) ────────────────────
         public event Action<float> OnHungerChanged;
         public event Action<float> OnIntimacyChanged;
@@ -81,6 +86,10 @@ namespace CMS.AR_MyPet
             Intimacy  = initialIntimacy;
             Happiness = initialHappiness;
 
+            _hunger = initialHunger;
+            _intimacy = initialIntimacy;
+            _happiness = initialHappiness;
+
             _decayTick = new WaitForSeconds(1f); // GC 절약
             StartCoroutine(DecayLoop());
 
@@ -115,11 +124,6 @@ namespace CMS.AR_MyPet
                 MyPetManager.myPetInstance?.ReportHealthChanged(Hunger);
             }
         }
-
-        // 내부 backing field (ApplyDecay에서 ref 사용)
-        private float _hunger;
-        private float _intimacy;
-        private float _happiness;
 
         private void ApplyDecay(ref float field, float rate,
                                 Action<float> ev, Action<float> syncProp)
