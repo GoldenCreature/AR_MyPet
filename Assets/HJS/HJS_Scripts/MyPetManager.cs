@@ -90,6 +90,13 @@ namespace HJS.AR_MyPet
             isPetSpawned = true;
             Debug.Log("<color=green>MyPetManager:</color> 펫매니저에 동물 등록 완료, isPetSpawned => true ");
 
+            Animator anim = pet.GetComponentInChildren<Animator>();
+            if (anim != null)
+            {
+                status.SetAnimator(anim); //민수님 로직에 애니메이터 연결
+                Debug.Log("<color=green>MyPetManager:</color> 애니메이터 자동 연결 완료");
+            }
+
             // 스텟 수치가 변할 때마다 민규님 UI 슬라이더를 갱신하도록 이벤트 연결
             BindEvents();
 
