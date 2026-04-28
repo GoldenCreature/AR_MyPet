@@ -67,8 +67,9 @@ namespace KGB.AR_MyPet
 
             if (roll == 0)
             {
-                // 앉기 - 제자리에서 sitting 애니메이션
-                _isLookingAtCamera = false;
+                // 카메라 바라보고 앉기
+                LookAtCamera();
+                _isLookingAtCamera = true;
                 _animator.SetBool("IsWalking", false);
             }
             else
@@ -96,6 +97,7 @@ namespace KGB.AR_MyPet
                 _isMoving = false;
                 _idleTimer = 0f;
                 _animator.SetBool("IsWalking", false);
+                LookAtCamera();
             }
         }
 
