@@ -83,6 +83,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: ReactTrigger
     m_EventTreshold: 0
+  - m_ConditionMode: 4
+    m_ConditionEvent: HungerLevel
+    m_EventTreshold: 50
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102192097396800364}
   m_Solo: 0
@@ -418,7 +421,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: sitting_beagle
-  m_Speed: 1
+  m_Speed: 0
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 369831579834296359}
