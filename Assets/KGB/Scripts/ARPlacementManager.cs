@@ -1,14 +1,18 @@
+using CMS.AR_MyPet;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using System.Collections.Generic;
-
+using System;
 namespace KGB.AR_MyPet
 {
     public class ARPlacementManager : MonoBehaviour
     {
         [SerializeField] private ARRaycastManager _raycastManager;
         [SerializeField] private List<GameObject> _animalPrefabs;
+
 
         private List<ARRaycastHit> _hits = new List<ARRaycastHit>();
         private GameObject _spawnedAnimal;
@@ -49,16 +53,12 @@ namespace KGB.AR_MyPet
             }
         }
 
+        // ARPlacementManager.cs SpawnAnimal() �ȿ� �߰�
         private void SpawnAnimal(Pose hitPose)
         {
             Vector3 spawnPosition = new Vector3(hitPose.position.x, 0f, hitPose.position.z);
             _spawnedAnimal = Instantiate(_animalPrefabs[_selectedAnimalIndex], spawnPosition, hitPose.rotation);
-
-            if (_spawnedAnimal.GetComponent<AnimalMover>() == null)
-                _spawnedAnimal.AddComponent<AnimalMover>();
-
-            // MyPetManager�� ���
-            HJS.AR_MyPet.MyPetManager.myPetInstance?.RegisterPet(_spawnedAnimal);
+            _spawnedAnimal.AddComponent<AnimalMover>();
         }
 
         public GameObject GetSpawnedAnimal() => _spawnedAnimal;
