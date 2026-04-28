@@ -1120,10 +1120,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   happinessSlider: {fileID: 753647354}
-  hungerScript: {fileID: 1845269224}
-  moodScript: {fileID: 1367295466}
-  maxHappiness: 100
-  happinessDecreaseRate: 1
 --- !u!114 &753647354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1267,6 +1263,18 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 2
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1631049755}
+        m_TargetAssemblyTypeName: HJS.AR_MyPet.MyPetManager, Assembly-CSharp
+        m_MethodName: OnPlayButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
@@ -1699,10 +1707,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moodSlider: {fileID: 1367295465}
-  hungerScript: {fileID: 1845269224}
-  maxMood: 100
-  currentMood: 0
-  moodDecreaseRate: 1
 --- !u!1 &1410069759
 GameObject:
   m_ObjectHideFlags: 0
@@ -1786,15 +1790,27 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1845269224}
-        m_TargetAssemblyTypeName: SGMG.AR_MyPet.HungerBar, Assembly-CSharp
-        m_MethodName: Feed
-        m_Mode: 4
+      - m_Target: {fileID: 1845269223}
+        m_TargetAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+        m_MethodName: StopCoroutine
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 2
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1631049755}
+        m_TargetAssemblyTypeName: HJS.AR_MyPet.MyPetManager, Assembly-CSharp
+        m_MethodName: OnFeedButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
@@ -1939,6 +1955,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a987738a0ece94bbbed4413d94769e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1631049754
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1631049756}
+  - component: {fileID: 1631049755}
+  m_Layer: 0
+  m_Name: myPetManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1631049755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1631049754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28484e84f555c1947a83e01693bac82a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentPet: {fileID: 0}
+  hungerBarUI: {fileID: 1845269224}
+  happinessBarUI: {fileID: 753647353}
+  moodBarUI: {fileID: 1367295466}
+--- !u!4 &1631049756
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1631049754}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 517.83203, y: 963.1093, z: 0.42841148}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1716544921
 GameObject:
   m_ObjectHideFlags: 0
@@ -2275,9 +2339,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hungerSlider: {fileID: 1845269223}
-  maxHunger: 100
-  currentHunger: 0
-  decreaseRatePerSecond: 0.5
 --- !u!1 &1846223458
 GameObject:
   m_ObjectHideFlags: 0
@@ -2437,3 +2498,4 @@ SceneRoots:
   - {fileID: 696386411}
   - {fileID: 700106135}
   - {fileID: 595111504}
+  - {fileID: 1631049756}

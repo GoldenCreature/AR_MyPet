@@ -75,7 +75,7 @@ namespace HJS.AR_MyPet
             if (pet == null) return;
             
             PetStatusController newStatus = pet.GetComponent<PetStatusController>();
-            if (status == null)
+            if (newStatus == null)
             {
                 Debug.LogWarning("<color=red>MyPetManager: PetStatusController를 찾을 수 없습니다!");
                 return;
