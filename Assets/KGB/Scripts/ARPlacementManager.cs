@@ -57,9 +57,21 @@ namespace KGB.AR_MyPet
         {
             Vector3 spawnPosition = new Vector3(hitPose.position.x, 0f, hitPose.position.z);
             _spawnedAnimal = Instantiate(_animalPrefabs[_selectedAnimalIndex], spawnPosition, hitPose.rotation);
+
+            if (_spawnedAnimal == null)
+            {
+                Debug.LogError("<color=red>ARPlacementManager:</color> Failed to instantiate prefab!");
+                return;
+            }
+
+            Debug.Log($"<color=green>ARPlacementManager:</color> Prefab spawned -> {_spawnedAnimal.name} / Position: {spawnPosition}");
+
             _spawnedAnimal.AddComponent<AnimalMover>();
+            Debug.Log("<color=green>ARPlacementManager:</color> AnimalMover added");
 
             _spawnedAnimal.AddComponent<PetStatusController>();
+            Debug.Log("<color=green>ARPlacementManager:</color> PetStatusController added");
+
             HJS.AR_MyPet.MyPetManager.myPetInstance?.RegisterPet(_spawnedAnimal);
         }
 
