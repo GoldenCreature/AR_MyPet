@@ -1,4 +1,5 @@
 using UnityEngine;
+using HJS.AR_MyPet;
 
 namespace KGB.AR_MyPet
 {
@@ -20,6 +21,23 @@ namespace KGB.AR_MyPet
             _targetPosition = transform.position;
             _camera = Camera.main;
             _animator = GetComponent<Animator>();
+        }
+
+        private void Start()
+        {
+            if (MyPetManager.myPetInstance != null)
+                MyPetManager.myPetInstance.OnPetTouchedEvent += OnTouched;
+        }
+
+        private void OnDestroy()
+        {
+            if (MyPetManager.myPetInstance != null)
+                MyPetManager.myPetInstance.OnPetTouchedEvent -= OnTouched;
+        }
+
+        private void OnTouched()
+        {
+            _animator.SetTrigger("TouchTrigger");
         }
 
         private void Update()
