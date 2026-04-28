@@ -58,6 +58,10 @@ namespace KGB.AR_MyPet
             Vector3 spawnPosition = new Vector3(hitPose.position.x, 0f, hitPose.position.z);
             _spawnedAnimal = Instantiate(_animalPrefabs[_selectedAnimalIndex], spawnPosition, hitPose.rotation);
             _spawnedAnimal.AddComponent<AnimalMover>();
+
+            var status = _spawnedAnimal.AddComponent<PetStatusController>();
+            status.SetAnimator(_spawnedAnimal.GetComponent<Animator>());
+
             HJS.AR_MyPet.MyPetManager.myPetInstance?.RegisterPet(_spawnedAnimal);
         }
 
