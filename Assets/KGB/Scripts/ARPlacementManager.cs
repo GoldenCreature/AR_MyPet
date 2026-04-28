@@ -1,9 +1,8 @@
-using CMS.AR_MyPet;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using System.Collections.Generic;
+
 namespace KGB.AR_MyPet
 {
     public class ARPlacementManager : MonoBehaviour
@@ -11,51 +10,45 @@ namespace KGB.AR_MyPet
         [SerializeField] private ARRaycastManager _raycastManager;
         [SerializeField] private List<GameObject> _animalPrefabs;
 
-
         private List<ARRaycastHit> _hits = new List<ARRaycastHit>();
         private GameObject _spawnedAnimal;
         private int _selectedAnimalIndex = 0;
 
         private void Update()
         {
-            if (Input.touchCount == 0)
-                return;
-            Debug.Log("Touch detected");
+            if (Input.touchCount == 0) return;
 
             Touch touch = Input.GetTouch(0);
-            if (touch.phase != TouchPhase.Began)
-                return;
-            Debug.Log("Touch began");
+            if (touch.phase != TouchPhase.Began) return;
 
-            /*if (_spawnedAnimal != null)
-            {
-                Debug.Log("Already spawned");
-                return;
-            }*/
-
-            Debug.Log("Performing raycast");
             if (_raycastManager.Raycast(touch.position, _hits, TrackableType.PlaneWithinPolygon))
             {
                 Pose hitPose = _hits[0].pose;
-                Debug.Log("Raycast hit detected");
+
                 if (_spawnedAnimal == null)
                 {
                     SpawnAnimal(hitPose);
                 }
                 else
                 {
-                    AnimalMover mover = _spawnedAnimal.GetComponent<AnimalMover>();
-                    Debug.Log($"AnimalMover: {mover != null}");
-
-                    if (mover != null)
-                        mover.SetTarget(hitPose.position);
+                    // ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
+                    Ray ray = Camera.main.ScreenPointToRay(touch.position);
+                    if (Physics.Raycast(ray, out RaycastHit hit) && hit.collider.gameObject == _spawnedAnimal)
+                    {
+                        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ Ä£ï¿½Ðµï¿½ ï¿½ï¿½ï¿½
+                        Debug.Log("Pet touch detected -> Intimacy increased");
+                        HJS.AR_MyPet.MyPetManager.myPetInstance?.OnPetTouched();
+                    }
                     else
-                        Debug.Log("AnimalMover°¡ null!");
+                    {
+                        // ï¿½Ù´ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ ï¿½Ìµï¿½
+                        Debug.Log("Ground touch detected -> Move");
+                        _spawnedAnimal.GetComponent<AnimalMover>().SetTarget(hitPose.position);
+                    }
                 }
             }
         }
 
-        // ARPlacementManager.cs SpawnAnimal() ¾È¿¡ Ãß°¡
         private void SpawnAnimal(Pose hitPose)
         {
             Vector3 spawnPosition = new Vector3(hitPose.position.x, 0f, hitPose.position.z);
@@ -64,13 +57,10 @@ namespace KGB.AR_MyPet
             if (_spawnedAnimal.GetComponent<AnimalMover>() == null)
                 _spawnedAnimal.AddComponent<AnimalMover>();
 
-            // PetStatusController¿¡ Animator ¿¬°á
-            Animator anim = _spawnedAnimal.GetComponent<Animator>();
-            PetStatusController.Instance?.SetAnimator(anim);
+            // MyPetManagerï¿½ï¿½ ï¿½ï¿½ï¿½
+            HJS.AR_MyPet.MyPetManager.myPetInstance?.RegisterPet(_spawnedAnimal);
         }
 
         public GameObject GetSpawnedAnimal() => _spawnedAnimal;
     }
-    }
-
-
+}
