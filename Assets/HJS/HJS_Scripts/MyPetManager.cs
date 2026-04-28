@@ -18,6 +18,8 @@ namespace HJS.AR_MyPet
         [Tooltip("현재 씬에 펫이 생성되어 등록되었는지 여부")]
         public bool isPetSpawned { get; private set; } = false;
 
+        public event Action OnPetTouchedEvent;
+
         // 펫 상태 컨트롤러 참조용 변수
         private PetStatusController status;
 
@@ -181,7 +183,7 @@ namespace HJS.AR_MyPet
 
             Debug.Log("펫이 터치되었습니다.");
             status?.OnTouched();
-
+            OnPetTouchedEvent?.Invoke();
         }
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
