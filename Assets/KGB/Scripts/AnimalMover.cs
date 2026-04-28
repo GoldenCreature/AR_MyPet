@@ -12,7 +12,7 @@ namespace KGB.AR_MyPet
 
         private Vector3 _targetPosition;
         private bool _isMoving = false;
-        private bool _isLookingAtCamera = false;
+
         private float _idleTimer = 0f;
         private Camera _camera;
         private Animator _animator;
@@ -46,7 +46,6 @@ namespace KGB.AR_MyPet
         {
             if (_isMoving)
             {
-                _isLookingAtCamera = false;
                 MoveToTarget();
             }
             else
@@ -69,7 +68,6 @@ namespace KGB.AR_MyPet
             {
                 // 카메라 바라보고 앉기
                 LookAtCamera();
-                _isLookingAtCamera = true;
                 _animator.SetBool("IsWalking", false);
             }
             else
