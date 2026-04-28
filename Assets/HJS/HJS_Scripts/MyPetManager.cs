@@ -93,6 +93,13 @@ namespace HJS.AR_MyPet
 
             RefreshAllUI(); // 등록후 스텟 값과 UI값 동기화
             Debug.Log("<color=green>MyPetManager:</color> UI 동기화 완료");
+
+            Animator anim = pet.GetComponentInChildren<Animator>();
+            if (anim != null)
+            {
+                status.SetAnimator(anim);
+                Debug.Log("<color=green>MyPetManager:</color> 애니메이터 자동 연결 완료");
+            }
         }
 
         /// <summary>
