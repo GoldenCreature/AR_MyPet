@@ -2,6 +2,7 @@ using CMS.AR_MyPet;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -15,6 +16,7 @@ namespace KGB.AR_MyPet
         private List<ARRaycastHit> _hits = new List<ARRaycastHit>();
         private GameObject _spawnedAnimal;
         private int _selectedAnimalIndex = 0;
+        private bool _isSpawning = false;
 
         private void Update()
         {
@@ -23,11 +25,14 @@ namespace KGB.AR_MyPet
             Touch touch = Input.GetTouch(0);
             if (touch.phase != TouchPhase.Began) return;
 
+            // UI 위를 터치했으면 AR 처리 무시
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(touch.fingerId)) return;
+
             if (_raycastManager.Raycast(touch.position, _hits, TrackableType.PlaneWithinPolygon))
             {
                 Pose hitPose = _hits[0].pose;
 
-                if (_spawnedAnimal == null)
+                if (_spawnedAnimal == null && !_isSpawning)
                 {
                     SpawnAnimal(hitPose);
                 }
@@ -55,12 +60,27 @@ namespace KGB.AR_MyPet
         // ARPlacementManager.cs SpawnAnimal() 내부 추가 사항
         private void SpawnAnimal(Pose hitPose)
         {
-            Vector3 spawnPosition = new Vector3(hitPose.position.x, 0f, hitPose.position.z);
+            _isSpawning = true;
+            Vector3 spawnPosition = hitPose.position;
             _spawnedAnimal = Instantiate(_animalPrefabs[_selectedAnimalIndex], spawnPosition, hitPose.rotation);
+
+            if (_spawnedAnimal == null)
+            {
+                Debug.LogError("<color=red>ARPlacementManager:</color> Failed to instantiate prefab!");
+                _isSpawning = false;
+                return;
+            }
+
+            Debug.Log($"<color=green>ARPlacementManager:</color> Prefab spawned -> {_spawnedAnimal.name} / Position: {spawnPosition}");
+
             _spawnedAnimal.AddComponent<AnimalMover>();
+            Debug.Log("<color=green>ARPlacementManager:</color> AnimalMover added");
 
             _spawnedAnimal.AddComponent<PetStatusController>();
+            Debug.Log("<color=green>ARPlacementManager:</color> PetStatusController added");
+
             HJS.AR_MyPet.MyPetManager.myPetInstance?.RegisterPet(_spawnedAnimal);
+            _isSpawning = false;
         }
 
         public GameObject GetSpawnedAnimal() => _spawnedAnimal;  
